@@ -1,0 +1,2 @@
+# Ignore common OS-generated files/folders
+.DS_Store
