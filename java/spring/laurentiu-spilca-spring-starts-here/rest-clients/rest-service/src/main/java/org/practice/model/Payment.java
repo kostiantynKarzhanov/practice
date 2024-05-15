@@ -24,4 +24,12 @@ public class Payment {
     public void setAmount(double amount) {
         this.amount = amount;
     }
+
+    @Override
+    public String toString() {
+        return "Payment[" +
+                "id='" + id + '\'' +
+                ", amount=" + amount +
+                ']';
+    }
 }

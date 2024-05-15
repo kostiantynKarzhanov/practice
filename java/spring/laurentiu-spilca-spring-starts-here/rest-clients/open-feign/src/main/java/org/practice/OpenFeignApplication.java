@@ -1,4 +1,4 @@
-package org.practice.openfeign;
+package org.practice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

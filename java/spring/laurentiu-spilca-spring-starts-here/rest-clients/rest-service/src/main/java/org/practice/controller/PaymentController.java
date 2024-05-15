@@ -18,15 +18,9 @@ public class PaymentController {
             @RequestHeader String requestId,
             @RequestBody Payment payment
     ) {
-        this.logger.info(
-                String.format(
-                        "Payment service received payment: [ id=%s; amount=%f ]",
-                        requestId,
-                        payment.getAmount()
-                )
-        );
-
         payment.setId(UUID.randomUUID().toString());
+
+        this.logger.info("Payment Service set payment id: " + payment.getId());
 
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
