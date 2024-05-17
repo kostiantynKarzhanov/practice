@@ -1,6 +1,7 @@
 package org.practice.proxy;
 
 import org.practice.model.PaymentDTO;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -15,12 +16,13 @@ public class PaymentProxy {
 
     private final RestClient restClient;
 
-    public PaymentProxy(RestClient restClient) {
+    public PaymentProxy(@Qualifier("paymentRestClient") RestClient restClient) {
         this.restClient = restClient;
     }
 
     public ResponseEntity<PaymentDTO> createPayment(PaymentDTO paymentDTO) {
         String requestId = UUID.randomUUID().toString();
+
         this.logger.info("requestId header is set: " + requestId);
 
         return this.restClient
