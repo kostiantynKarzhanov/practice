@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Transfer</title>
+</head>
+<body>
+    <h1 th:text="'Make transfer'"></h1>
+    <div>
+        <p th:text="'Welcome, ' + ${loggedUserName}"></p>
+        <p th:text="'Current balance: ' + ${balance}"></p>
+    </div>
+    <div>
+        <form action="/transfer" method="post">
+            <label for="amount">Send:
+                <input type="number" id="amount" name="amount" min="0" th:placeholder="${balance}">
+            </label>
+            <label for="userAccountName">To:
+                <select id="userAccountName" name="userAccountName">
+                    <option
+                            th:each="userAccountName : ${userAccountNameList}"
+                            th:value="${userAccountName}"
+                            th:text="${userAccountName}">
+                    </option>
+                </select>
+            </label>
+            <span th:style="'color: red;'" th:text="${InsufficientBalanceException}"></span>
+            <br>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+    <div>
+        <a href="/transfer?logout">logout</a>
+    </div>
+</body>
+</html>
