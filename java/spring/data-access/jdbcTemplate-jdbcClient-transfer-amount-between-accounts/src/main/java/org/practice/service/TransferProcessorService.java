@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 @Service
 public class TransferProcessorService {
@@ -26,7 +27,7 @@ public class TransferProcessorService {
 
         BigDecimal senderNewBalance = senderOptional
                 .map(userAccount -> userAccount.balance().subtract(amount))
-                .orElseThrow(AccountNotFoundException::new);
+                .orElseThrow(() -> new AccountNotFoundException());
 
         if (senderNewBalance.compareTo(BigDecimal.ZERO) < 0) throw new InsufficientBalanceException();
 
