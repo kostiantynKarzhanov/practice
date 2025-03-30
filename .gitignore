@@ -1,2 +1,8 @@
+# dependencies
+node_modules/
+
+# Ignore environment variables
+.env
+
 # Ignore common OS-generated files/folders
 .DS_Store
