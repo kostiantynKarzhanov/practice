@@ -6,7 +6,7 @@ const generateDigest = (data) => {
 
     hashObj.update(data);
 
-    return hashObj.digest('utf8');
+    return hashObj.digest('hex');
 };
 
 export default generateDigest;
