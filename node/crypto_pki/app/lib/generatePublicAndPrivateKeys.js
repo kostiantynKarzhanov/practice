@@ -1,7 +1,10 @@
 // import built-in modules
 import { generateKeyPair } from 'node:crypto';
 
-const generatePublicAndPrivateKeyPair = () => {
+// import custom modules
+import log from './log.js';
+
+const generatePublicAndPrivateKeys = () => {
     const keyPairOptions = {
         modulusLength: 4096, // bits, rsa key length
         publicKeyEncoding: {
@@ -19,8 +22,10 @@ const generatePublicAndPrivateKeyPair = () => {
             if (err) reject(err);
 
             resolve({ publicKey, privateKey });
+
+            log('key pair successfully created');
         });
     });
 };
 
-export default generatePublicAndPrivateKeyPair;
+export default generatePublicAndPrivateKeys;

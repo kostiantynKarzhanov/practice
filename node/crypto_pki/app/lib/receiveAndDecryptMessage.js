@@ -3,16 +3,31 @@ import { join } from 'node:path';
 import { readFile, writeFile } from 'node:fs/promises';
 import { privateDecrypt } from 'node:crypto';
 
-const receiveAndDecryptMessage = async (idSender, idRecipient, path) => {
-    const pathEncryptedMessage = join(path, `user${idSender}`, 'messages', 'encrypted.txt');
-    const pathDecryptedMessage = join(path, `user${idRecipient}`, 'messages', 'decrypted.txt');
-    const pathPrivateKeyRecipient = join(path, `user${idRecipient}`, 'keys', 'privateKey.pem');
+// import custom modules
+import log from './log.js';
 
-    const privateKeyRecipient = await readFile(pathPrivateKeyRecipient, 'utf8');
-    const encryptedBuffer = await readFile(join(pathEncryptedMessage));
-    const messageBuffer = privateDecrypt(privateKeyRecipient, encryptedBuffer);
+const receiveAndDecryptMessage = async (receivedBy, sentBy, path) => {
+    try {
+        const pathEncryptedMessage = join(path, `user${sentBy}`, 'messages', 'encrypted.txt');
+        const pathDecryptedMessage = join(path, `user${receivedBy}`, 'messages', 'decrypted.txt');
+        const pathPrivateKeyRecipient = join(path, `user${receivedBy}`, 'keys', 'privateKey.pem');
+    
+        const privateKeyRecipient = await readFile(pathPrivateKeyRecipient, 'utf8');
+        const encryptedBuffer = await readFile(join(pathEncryptedMessage));
 
-    await writeFile(pathDecryptedMessage, messageBuffer);
+        log(`Receiver: user${receivedBy} "received" encrypted message from user${sentBy}`);
+
+        const messageBuffer = privateDecrypt(privateKeyRecipient, encryptedBuffer);
+
+        log(`Receiver: user${receivedBy} decrypted message`);
+
+        await writeFile(pathDecryptedMessage, messageBuffer);
+
+        log(`Receiver: user${receivedBy} saved decrypted message to the file`);
+    } catch (err) {
+        console.error(err.stack);
+        throw err;
+    }
 };
 
 export default receiveAndDecryptMessage;

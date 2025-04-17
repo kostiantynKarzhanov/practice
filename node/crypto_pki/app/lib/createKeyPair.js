@@ -2,13 +2,20 @@
 import fs from 'node:fs/promises';
 
 // import custom modules
-import generatePublicAndPrivateKeyPair from './generatePublicAndPrivateKeyPair.js';
+import generatePublicAndPrivateKeys from './generatePublicAndPrivateKeys.js';
+import log from './log.js';
 
 const createKeyPair = async (path) => {
-    const keyPair = await generatePublicAndPrivateKeyPair();
+    try {
+        const { publicKey, privateKey } = await generatePublicAndPrivateKeys();
 
-    fs.writeFile(`${path}/publicKey.pem`, keyPair.publicKey, 'utf8');
-    fs.writeFile(`${path}/privateKey.pem`, keyPair.privateKey, 'utf8');
+        await Promise.all([fs.writeFile(`${path}/publicKey.pem`, publicKey, 'utf8'), fs.writeFile(`${path}/privateKey.pem`, privateKey, 'utf8')]);
+
+        log('Public and Private keys saved to the corresponding files');
+    } catch (err) {
+        console.error(err.stack);
+        throw err;
+    }
 };
 
 export default createKeyPair;
