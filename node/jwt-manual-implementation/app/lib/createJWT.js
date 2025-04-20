@@ -4,7 +4,8 @@ import { writeFile } from 'node:fs/promises';
 
 // import custom modules
 import generateHexDigest from './generateHexDigest.js'
-import generateDigitalSignature from './generateDigitalSignature.js'
+// import generateDigitalSignature from './generateDigitalSignature.js'
+import generateDigitalSignature from './generateDigitalSignature_v2.js'
 import log from './log.js';
 
 const createJWT = (headerObj, payloadObj, pathPrivateKey, pathJWT) => {

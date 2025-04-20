@@ -5,7 +5,8 @@ import { fileURLToPath } from 'node:url';
 // import custom modules
 import createKeyPair from './lib/createKeyPair.js';
 import createJWT from './lib/createJWT.js';
-import verifyJWTSignature from './lib/verifyJWTSignature.js';
+// import verifyJWTSignature from './lib/verifyJWTSignature.js';
+import verifyJWTSignature from './lib/verifyJWTSignature_v2.js';
 import log from './lib/log.js';
 
 const __filename = fileURLToPath(import.meta.url);
