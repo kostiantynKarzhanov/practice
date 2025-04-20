@@ -5,7 +5,7 @@ import { writeFile } from 'node:fs/promises';
 import generateKeyPairPromise from './generateKeyPairPromise.js';
 import log from './log.js';
 
-const saveKeyPairToFile = (pathPublicKey, pathPrivateKey) => {
+const createKeyPair = (pathPublicKey, pathPrivateKey) => {
     return generateKeyPairPromise()
         .then(({ publicKey, privateKey }) => {
             return Promise.all([writeFile(pathPublicKey, publicKey), writeFile(pathPrivateKey, privateKey)]);
@@ -19,4 +19,4 @@ const saveKeyPairToFile = (pathPublicKey, pathPrivateKey) => {
         })
 };
 
-export default saveKeyPairToFile;
+export default createKeyPair;
