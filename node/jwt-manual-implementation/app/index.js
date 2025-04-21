@@ -4,10 +4,19 @@ import { fileURLToPath } from 'node:url';
 
 // import custom modules
 import createKeyPair from './lib/createKeyPair.js';
-import createJWT from './lib/createJWT.js';
-// import verifyJWTSignature from './lib/verifyJWTSignature.js';
-import verifyJWTSignature from './lib/verifyJWTSignature_v2.js';
 import log from './lib/log.js';
+
+// ----- version-1: NOT correct implementation -----
+// (token signature will be different from https://jwt.io/)
+// log('----- version-1 is running -----');
+// import createJWT from './lib/createJWT_v1.js';
+// import verifyJWTSignature from './lib/verifyJWTSignature_v1.js';
+
+// ----- version-2: the correct implementation -----
+// (token is exactly the same as from https://jwt.io/)
+log('----- version-2 is running -----');
+import createJWT from './lib/createJWT_v2.js';
+import verifyJWTSignature from './lib/verifyJWTSignature_v2.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -28,20 +37,17 @@ const payloadObj = {
     "iat": Date.now()
 };
 
-const main = () => {
-    createKeyPair(pathPublicKey, pathPrivateKey)
-        .then(() => {
-            return createJWT(headerObj, payloadObj, pathPrivateKey, pathJWT);
-        })
-        .then(() => {
-            return verifyJWTSignature(pathPublicKey, pathJWT);
-        })
-        .then(isVerified => {
-            log('--- token status: ' + (isVerified ? 'valid' : 'NOT valid'));
-        })
-        .catch(err => {
-            console.error(err.stack);
-        });
+const main = async () => {
+    try {
+        await createKeyPair(pathPublicKey, pathPrivateKey);
+        await createJWT(headerObj, payloadObj, pathPrivateKey, pathJWT);
+
+        const isValid = await verifyJWTSignature(pathPublicKey, pathJWT);
+        log('--- token status: ' + (isValid ? 'valid' : 'NOT valid'));
+    }
+    catch (err) {
+        console.error(err.stack);
+    }
 }
 
 main();

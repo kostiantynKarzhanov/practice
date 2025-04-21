@@ -2,15 +2,15 @@
 import { readFile } from 'node:fs/promises';
 import { getHashes, createSign } from 'node:crypto';
 
-const generateDigitalSignature = (pathPrivateKey, digest) => {
+const generateDigitalSignature = (pathPrivateKey, data) => {
     return readFile(pathPrivateKey)
         .then(privateKeyBuffer => {
             // console.log(getHashes());
             const signObj = createSign('RSA-SHA256');
-            signObj.update(digest);
+            signObj.write(data);
             signObj.end();
 
-            return signObj.sign(privateKeyBuffer);
+            return signObj.sign(privateKeyBuffer, 'base64url');
         })
         .catch(err => {
             console.error(err.stack);
