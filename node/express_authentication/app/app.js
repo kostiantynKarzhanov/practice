@@ -3,6 +3,10 @@ import express from 'express';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
+// ----- import routes -----
+import loginRouter from './routes/loginRoute.js';
+import registerRouter from './routes/registerRoute.js';
+
 // ----- import middleware -----
 import generalErrorHandler from './middleware/generalErrorHandler.js';
 
@@ -19,6 +23,9 @@ app.set('x-powered-by', false);
 app.get('/', (req, res) => {
     res.render('index', { h1: 'Home' });
 });
+
+app.use('/login', loginRouter);
+app.use('/register', registerRouter);
 
 app.use(generalErrorHandler);
 
