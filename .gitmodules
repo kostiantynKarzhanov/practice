@@ -1,3 +1,0 @@
-[submodule "node/express_authentication"]
-	path = node/express_authentication
-	url = ./node/express_authentication
