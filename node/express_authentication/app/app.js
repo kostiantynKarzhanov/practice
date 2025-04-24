@@ -3,9 +3,10 @@ import 'dotenv/config';
 import express from 'express';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import mongoose from 'mongoose';
 
 // ----- import custom modules -----
-import createDatabaseConnection from './config/createDatabaseConnection.js';
+import connectDatabase from './config/connectDatabase.js';
 
 // ----- import routes -----
 import loginRouter from './routes/loginRoute.js';
@@ -17,11 +18,10 @@ import generalErrorHandler from './middleware/generalErrorHandler.js';
 // ----- configure the app ----- 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const port = process.env.PORT || 3000;
-const dbString = process.env.DB_STR_MONGO;
 const app = express();
 
 // connect to the database
-createDatabaseConnection(dbString);
+connectDatabase();
 
 app.set('view engine', 'ejs');
 app.set('views', join(__dirname, 'views'));
@@ -40,7 +40,8 @@ app.use('/register', registerRouter);
 
 app.use(generalErrorHandler);
 
-app.listen(port, () => {
-    console.log(`Server is listening on port ${port}`);
+mongoose.connection.once('connected', () => {
+    app.listen(port, () => {
+        console.log(`Server is listening on port ${port}`);
+    });
 });
-
