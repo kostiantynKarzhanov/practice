@@ -8,9 +8,9 @@ import mongoose from 'mongoose';
 // ----- import custom modules -----
 import connectDatabase from './config/connectDatabase.js';
 
-// ----- import routes -----
-import loginRouter from './routes/loginRouter.js';
-import registerRouter from './routes/registerRouter.js';
+// ----- import routers -----
+import loginRouter from './routers/loginRouter.js';
+import registerRouter from './routers/registerRouter.js';
 
 // ----- import middleware -----
 import generalErrorHandler from './middleware/generalErrorHandler.js';
