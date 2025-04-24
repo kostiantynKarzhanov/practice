@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-const loginRouter = new Router();
+const loginRouter = Router();
 
 loginRouter.route('/')
     .get((req, res) => {

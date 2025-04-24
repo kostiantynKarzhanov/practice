@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { createUser } from '../controllers/registerController.js';
 
-const registerRouter = new Router();
+const registerRouter = Router();
 
 registerRouter.route('/')
     .get((req, res) => {
