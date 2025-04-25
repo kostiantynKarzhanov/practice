@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { stopServer } from '../utils/serverUtils.js';
 
 const connectDatabase = async () => {
     try {
@@ -7,12 +8,12 @@ const connectDatabase = async () => {
         console.log('Database connected');
     } catch (err) {
         console.error(err.stack);
-        throw err;
     }
 
-    mongoose.connection.on('error', () => {
-        console.error('Something happened with the database connection');
-        throw err;
+    mongoose.connection.on('error', (err) => {
+        console.error(`Database connection error: ${err.message}`);
+
+        stopServer(err.message);
     })
 };
 

@@ -21,8 +21,7 @@ const createUser = async (username, password) => {
                 statusCode: 409
             };
         } else {
-            console.error(err.stack);
-            throw err;
+            console.error(err.message);
         }
     }
 };

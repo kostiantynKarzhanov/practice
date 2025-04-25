@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 
 // ----- import custom modules -----
 import connectDatabase from './config/connectDatabase.js';
+import { stopServer } from './utils/serverUtils.js';
 
 // ----- import routers -----
 import loginRouter from './routers/loginRouter.js';
@@ -18,6 +19,7 @@ import generalErrorHandler from './middleware/generalErrorHandler.js';
 // ----- configure the app ----- 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const port = process.env.PORT || 3000;
+const databaseConnectionTimeout = setTimeout(stopServer, 3000, 'Database connection timeout');
 const app = express();
 
 // connect to the database
@@ -41,6 +43,8 @@ app.use('/register', registerRouter);
 app.use(generalErrorHandler);
 
 mongoose.connection.once('connected', () => {
+    clearTimeout(databaseConnectionTimeout);
+
     app.listen(port, () => {
         console.log(`Server is listening on port ${port}`);
     });
