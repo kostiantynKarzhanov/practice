@@ -1,10 +1,7 @@
 const generalErrorHandler = (err, req, res, next) => {
-    if (err) {
-        console.log('generalErrorHandler');
-        console.error('debug' + err.stack);
-    }
+    console.error(err.stack);
 
-    next();
+    res.status(500).send('Something broke!');
 };
 
 export default generalErrorHandler;

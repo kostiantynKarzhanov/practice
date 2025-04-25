@@ -4,6 +4,7 @@ import express from 'express';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import mongoose from 'mongoose';
+import cookieParser from 'cookie-parser';
 
 // ----- import custom modules -----
 import connectDatabase from './config/connectDatabase.js';
@@ -12,6 +13,7 @@ import { stopServer } from './utils/serverUtils.js';
 // ----- import routers -----
 import loginRouter from './routers/loginRouter.js';
 import registerRouter from './routers/registerRouter.js';
+import protectedRouter from './routers/protectedRouter.js';
 
 // ----- import middleware -----
 import generalErrorHandler from './middleware/generalErrorHandler.js';
@@ -31,6 +33,7 @@ app.set('x-powered-by', false);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // ----- define app routes -----
 app.get('/', (req, res) => {
@@ -39,7 +42,7 @@ app.get('/', (req, res) => {
 
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
-
+app.use('/protected', protectedRouter);
 app.use(generalErrorHandler);
 
 mongoose.connection.once('connected', () => {

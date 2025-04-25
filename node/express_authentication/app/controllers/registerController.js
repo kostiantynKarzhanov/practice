@@ -1,14 +1,14 @@
-import UserModel from '../models/UserModel.js';
-import { generateHashFromPassword, validatePassword } from '../utils/passwordUtils.js';
+import { createUser } from '../services/userService.js';
+import { generateHashFromPassword } from '../utils/passwordUtils.js';
 
-const createUser = async (username, password) => {
+const register = async (username, password) => {
     try {
         const { hash, salt } = await generateHashFromPassword(password);
-        const user = await UserModel.create({ name: username, password: hash, salt });
+        const user = await createUser(username, hash, salt);
 
         return {
             status: 'success',
-            message: `${user.name} has been registered`,
+            message: `user: "${user.name}" has been registered`,
             statusCode: 201
         };
     } catch (err) {
@@ -27,18 +27,5 @@ const createUser = async (username, password) => {
 };
 
 export {
-    createUser
+    register
 };
-
-// UserModel.create({ name: username, password })
-// .then(user => {
-//     console.log(user);
-//     res.redirect('/');
-
-// }).catch(err => {
-//     if (err.code === 11000) {
-//         res.status(409).send('<p>User already exists</p>');
-//     }
-
-//     console.error(err.message);
-// });

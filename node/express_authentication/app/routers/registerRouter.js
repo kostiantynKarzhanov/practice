@@ -1,5 +1,8 @@
+// ----- import built-in modules -----
 import { Router } from 'express';
-import { createUser } from '../controllers/registerController.js';
+
+// ----- import controllers -----
+import { register } from '../controllers/registerController.js';
 
 const registerRouter = Router();
 
@@ -9,8 +12,8 @@ registerRouter.route('/')
     })
     .post(async (req, res) => {
         const { username, password } = req.body;
+        const result = await register(username, password);
 
-        const result = await createUser(username, password);
         res.status(result.statusCode).json(result);
     });
 

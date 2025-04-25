@@ -16,7 +16,7 @@ const generateHashFromPassword = async (password, salt) => {
 const validatePassword = async (password, hashCompare, saltCompare) => {
     const { hash } = await generateHashFromPassword(password, saltCompare);
 
-    const bufferHash = Buffer.from(hash.slice(1), 'hex');
+    const bufferHash = Buffer.from(hash, 'hex');
     const bufferHashCompare = Buffer.from(hashCompare, 'hex');
 
     if (bufferHash.length !== bufferHashCompare.length) return false;
