@@ -1,7 +1,17 @@
+// ----- import models -----
 import UserModel from '../models/UserModel.js';
 
-const createUser = async (name, hash, salt) => {
-    return await UserModel.create({ name, hash, salt });
+// ----- import custom modules -----
+import { generateHashFromPassword } from '../utils/passwordUtils.js';
+
+const registerUser = async (username, password) => {
+    try {
+        const { hash, salt } = await generateHashFromPassword(password);
+         
+        return await UserModel.create({ name: username, hash, salt });
+    } catch (err) {
+        console.error(err.stack);
+    }
 };
 
 const findUserByName = async (name) => {
@@ -9,6 +19,6 @@ const findUserByName = async (name) => {
 };
 
 export {
-    createUser,
+    registerUser,
     findUserByName
 };
