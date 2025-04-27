@@ -1,7 +1,7 @@
 // ----- import services -----
 import { registerUser } from '../services/userService.js';
 
-const renderRegisterPage = (req, res) => {
+const renderRegisterView = (req, res) => {
     res.render('register', { h1: 'Register', action: 'register' });
 };
 
@@ -19,14 +19,14 @@ const handleRegister = async (req, res) => {
             console.error(err.message);
 
             res.status(409).json({
-                status: 'Failure',
+                status: 'error',
                 message: `User with the name "${err.keyValue.name}" already exists, try another name.`
             });
         } else {
             console.error(err.stack);
             
             res.status(500).json({
-                status: 'Error',
+                status: 'error',
                 message: 'Internal server error.'
             });
         }
@@ -34,6 +34,6 @@ const handleRegister = async (req, res) => {
 };
 
 export {
-    renderRegisterPage,
+    renderRegisterView,
     handleRegister
 };
