@@ -1,5 +1,7 @@
 const handleProtectedView = (req, res) => {
-    return res.render('protected', { h1: 'Protected' });
+    const { username } = req.user;
+
+    return res.render('protected', { h1: 'Protected', username  });
 };
 
 export {
