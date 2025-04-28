@@ -12,6 +12,7 @@ import { stopServer } from './utils/serverUtils.js';
 
 // ----- import routers -----
 import loginRouter from './routers/loginRouter.js';
+import logoutRouter from './routers/logoutRouter.js';
 import registerRouter from './routers/registerRouter.js';
 import protectedRouter from './routers/protectedRouter.js';
 
@@ -41,6 +42,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/login', loginRouter);
+app.use('/logout', logoutRouter);
 app.use('/register', registerRouter);
 app.use('/protected', protectedRouter);
 app.use(generalErrorHandler);
