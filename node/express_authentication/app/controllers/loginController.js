@@ -2,7 +2,7 @@
 import { loginUser } from '../services/userService.js';
 
 const renderLoginView = (req, res) => {
-    res.render('login', { h1: 'Login', action: 'login' });
+    return res.render('login', { h1: 'Login', action: 'login' });
 };
 
 const handleLogin = async (req, res) => {
@@ -17,9 +17,9 @@ const handleLogin = async (req, res) => {
             };
     
             res.cookie('auth', authCookieValue, authCookieOptions);
-            res.redirect('/protected');
+            return res.redirect('/protected');
         } else {
-            res.status(401).json({ 
+            return res.status(401).json({ 
                 status: 'error', 
                 message: 'Invalid credentials.' 
             });
@@ -27,7 +27,7 @@ const handleLogin = async (req, res) => {
     } catch (err) {
         console.error(err.stack);
             
-        res.status(500).json({
+        return res.status(500).json({
             status: 'error',
             message: 'Internal server error.'
         });

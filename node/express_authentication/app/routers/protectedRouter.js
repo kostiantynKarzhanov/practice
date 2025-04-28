@@ -1,20 +1,14 @@
 // ----- import built-in modules -----
 import { Router } from 'express';
 
-// ----- import custom modules -----
-import { isAuthenticated } from '../controllers/protectedController.js';
+// ----- import middleware -----
+import isAuthenticated from '../middleware/isAuthenticated.js';
+
+// ----- import controllers -----
+import { handleProtectedView } from '../controllers/protectedController.js';
 
 const protectedRouter = Router();
 
-protectedRouter.get('/', async (req, res) => {
-    const { auth } = req.cookies;
-
-    if (auth && auth.startsWith('Basic') && await isAuthenticated(auth)) {
-        res.render('protected', { h1: 'Protected' });
-    } else {
-        res.sendStatus(401);
-    }
-
-});
+protectedRouter.get('/', isAuthenticated, handleProtectedView);
 
 export default protectedRouter;

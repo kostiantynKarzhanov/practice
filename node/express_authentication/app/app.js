@@ -37,7 +37,7 @@ app.use(cookieParser());
 
 // ----- define app routes -----
 app.get('/', (req, res) => {
-    res.render('index', { h1: 'Home' });
+    return res.render('index', { h1: 'Home' });
 });
 
 app.use('/login', loginRouter);

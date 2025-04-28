@@ -2,7 +2,7 @@
 import { registerUser } from '../services/userService.js';
 
 const renderRegisterView = (req, res) => {
-    res.render('register', { h1: 'Register', action: 'register' });
+    return res.render('register', { h1: 'Register', action: 'register' });
 };
 
 const handleRegister = async (req, res) => {
@@ -10,7 +10,7 @@ const handleRegister = async (req, res) => {
         const { username, password } = req.body;
         const { name } = await registerUser(username, password);
     
-        res.status(201).json({ 
+        return res.status(201).json({ 
             status: 'Success', 
             message: `User with the name: "${name}" has been registered.`
         });
@@ -18,14 +18,14 @@ const handleRegister = async (req, res) => {
         if (err.code === 11000) {
             console.error(err.message);
 
-            res.status(409).json({
+            return res.status(409).json({
                 status: 'error',
                 message: `User with the name "${err.keyValue.name}" already exists, try another name.`
             });
         } else {
             console.error(err.stack);
             
-            res.status(500).json({
+            return res.status(500).json({
                 status: 'error',
                 message: 'Internal server error.'
             });
