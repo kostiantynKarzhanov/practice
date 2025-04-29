@@ -8,7 +8,7 @@ const registerUser = async (name, password) => {
     try {
         const { hash, salt } = await generateHashFromPassword(password);
          
-        return await UserModel.create({ name, hash, salt });
+        return UserModel.create({ name, hash, salt });
     } catch (err) {
         console.error(err.stack);
 
