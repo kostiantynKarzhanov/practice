@@ -3,7 +3,7 @@ import SessionModel from '../models/SessionModel.js';
 
 const createSession = (sid, username) => {
     const maxAge = 1000 * 60 * 60; // 1 hour
-    const expires = Date.now() + maxAge;
+    const expires = new Date(Date.now() + maxAge);
 
     return SessionModel.create({ sid, username, expires });
 

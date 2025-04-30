@@ -12,6 +12,7 @@ const sessionSchema = new mongoose.Schema({
     },
     expires: {
         type: Date,
+        expires: 0,
         required: true
     }
 });
