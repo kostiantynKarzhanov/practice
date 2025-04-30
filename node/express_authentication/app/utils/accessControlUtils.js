@@ -24,7 +24,10 @@ const validatePassword = async (password, hashCompare, saltCompare) => {
     return timingSafeEqual(bufferHash, bufferHashCompare);
 };
 
+const generateSID = () => randomBytes(32).toString('hex');
+
 export {
     generateHashFromPassword,
-    validatePassword
+    validatePassword,
+    generateSID
 };

@@ -1,5 +1,6 @@
 // ----- import services -----
 import { loginUser } from '../services/userService.js';
+import { createSession } from '../services/sessionService.js';
 
 const renderLoginView = (req, res) => {
     return res.render('login', { h1: 'Login', action: 'login' });
@@ -8,15 +9,19 @@ const renderLoginView = (req, res) => {
 const handleLogin = async (req, res) => {
     try {
         const { username, password } = req.body;
-        const authCookieValue = await loginUser(username, password);
-        
-        if (authCookieValue) {
-            const authCookieOptions = {
-                httpOnly: true, 
-                maxAge: (1000 * 60 * 60) // 1 hour
+        const sessionID = await loginUser(username, password);
+
+        if (sessionID) {
+            const { sid, expires } = await createSession(sessionID, username);
+            
+            const sidCookieOptions = {
+                httpOnly: true,
+                secure: true,
+                expires
             };
     
-            res.cookie('auth', authCookieValue, authCookieOptions);
+            res.cookie('sid', sid, sidCookieOptions);
+
             return res.redirect('/protected');
         } else {
             return res.status(401).json({ 

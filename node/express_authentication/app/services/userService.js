@@ -2,13 +2,13 @@
 import UserModel from '../models/UserModel.js';
 
 // ----- import custom modules -----
-import { generateHashFromPassword, validatePassword } from '../utils/passwordUtils.js';
+import { generateHashFromPassword, validatePassword, generateSID } from '../utils/accessControlUtils.js';
 
 const registerUser = async (name, password) => {
     try {
         const { hash, salt } = await generateHashFromPassword(password);
          
-        return await UserModel.create({ name, hash, salt });
+        return UserModel.create({ name, hash, salt });
     } catch (err) {
         console.error(err.stack);
 
@@ -18,7 +18,7 @@ const registerUser = async (name, password) => {
 
 const verifyUser = async (name, password) => {
     try {
-        const user = await UserModel.findOne({ name });
+        const user = await UserModel.findOne({ name }).exec();
         const isVerified = user && await validatePassword(password, user.hash, user.salt);
 
         return isVerified;
@@ -34,10 +34,8 @@ const loginUser = async (name, password) => {
         const isVerified = await verifyUser(name, password);
 
         if (!isVerified) return null;
-
-        const credentialsBase64 = Buffer.from(name + ':' + password, 'utf8').toString('base64');
     
-        return `Basic ${credentialsBase64}`;
+        return generateSID();
     } catch (err) {
         console.error(err.stack);
 
