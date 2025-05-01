@@ -1,6 +1,6 @@
 // ----- import services -----
 import { loginUser } from '../services/userService.js';
-import { createSession } from '../services/sessionService.js';
+import { createSession, createSessionCookie } from '../services/sessionService.js';
 
 const renderLoginView = (req, res) => {
     return res.render('login', { h1: 'Login', action: 'login' });
@@ -12,15 +12,10 @@ const handleLogin = async (req, res) => {
         const sessionID = await loginUser(username, password);
 
         if (sessionID) {
-            const { sid, expires } = await createSession(sessionID, username);
-            
-            const sidCookieOptions = {
-                httpOnly: true,
-                secure: true,
-                expires
-            };
-    
-            res.cookie('sid', sid, sidCookieOptions);
+            const session = await createSession(sessionID, username);
+            const { name, value, options } = createSessionCookie(session);
+
+            res.cookie(name, value, options);
 
             return res.redirect('/protected');
         } else {

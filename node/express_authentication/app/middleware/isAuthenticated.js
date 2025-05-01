@@ -1,6 +1,5 @@
 // ----- import services -----
-import { verifyUser } from '../services/userService.js';
-import { findSession, verifySession } from '../services/sessionService.js';
+import { findSession, verifySession, createSessionCookie, isSessionHalfExpired, resetSessionExpiryDate } from '../services/sessionService.js';
 
 const isAuthenticated = async (req, res, next) => {
     try {
@@ -11,9 +10,14 @@ const isAuthenticated = async (req, res, next) => {
             const isVerified = verifySession(session);
 
             if (isVerified) {
+                const currentSession = isSessionHalfExpired(session) ? await resetSessionExpiryDate(session) : session;
+                const { name, value, options } = createSessionCookie(currentSession);
+
                 req.user = { 
                     username: session.username 
                 }
+
+                res.cookie(name, value, options);
 
                 return next();
             }
