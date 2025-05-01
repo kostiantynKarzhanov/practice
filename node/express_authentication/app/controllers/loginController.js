@@ -17,7 +17,7 @@ const handleLogin = async (req, res) => {
 
             res.cookie(name, value, options);
 
-            return res.redirect('/protected');
+            return res.redirect(303, '/protected');
         } else {
             return res.status(401).json({ 
                 status: 'error', 

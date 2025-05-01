@@ -12,7 +12,7 @@ const handleLogout = async (req, res) => {
         res.clearCookie(process.env.SESSION_COOKIE_NAME, { httpOnly: true, secure: true });
     }
 
-    return res.redirect('/login');
+    return res.redirect(303, '/login');
 };
 
 export {
