@@ -16,9 +16,11 @@ const registerUser = async (name, password) => {
     }
 };
 
+const findUser = (name) => UserModel.findOne({ name }).exec();
+
 const verifyUser = async (name, password) => {
     try {
-        const user = await UserModel.findOne({ name }).exec();
+        const user = await findUser(name);
         const isVerified = user && await validatePassword(password, user.hash, user.salt);
 
         return isVerified;
