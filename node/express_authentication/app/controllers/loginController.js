@@ -5,19 +5,19 @@ const renderLoginView = (req, res) => {
     return res.render('login', { h1: 'Login', action: 'login' });
 };
 
-const handleLogin = async (req, res) => {
+const handleLogin = async (req, res, next) => {
     try {
         const { username, password } = req.body;
         const authCookieValue = await loginUser(username, password);
         
         if (authCookieValue) {
             const authCookieOptions = {
-                httpOnly: true, 
+                httpOnly: true,
                 maxAge: (1000 * 60 * 60) // 1 hour
             };
     
             res.cookie('auth', authCookieValue, authCookieOptions);
-            return res.redirect('/protected');
+            return res.redirect(303, '/protected');
         } else {
             return res.status(401).json({ 
                 status: 'error', 
@@ -27,10 +27,7 @@ const handleLogin = async (req, res) => {
     } catch (err) {
         console.error(err.stack);
             
-        return res.status(500).json({
-            status: 'error',
-            message: 'Internal server error.'
-        });
+        return next(err);
     }
 };
 

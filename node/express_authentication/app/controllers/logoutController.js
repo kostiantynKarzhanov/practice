@@ -3,7 +3,7 @@ const handleLogout = (req, res) => {
     // clearCookie sets a cookie with a given name to expiration date in the past: 01 Jan 1970 00:00:00 GMT
     res.clearCookie('auth', { httpOnly: true });
 
-    return res.redirect('/login');
+    return res.redirect(303, '/login');
 };
 
 export {
