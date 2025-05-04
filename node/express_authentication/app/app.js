@@ -11,6 +11,7 @@ import connectDatabase from './config/connectDatabase.js';
 import { stopServer } from './utils/serverUtils.js';
 
 // ----- import routers -----
+import indexRouter from './routers/indexRouter.js';
 import loginRouter from './routers/loginRouter.js';
 import logoutRouter from './routers/logoutRouter.js';
 import registerRouter from './routers/registerRouter.js';
@@ -37,10 +38,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // ----- define app routes -----
-app.get('/', (req, res) => {
-    return res.render('index', { h1: 'Home' });
-});
-
+app.get('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
 app.use('/register', registerRouter);

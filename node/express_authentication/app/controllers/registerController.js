@@ -5,7 +5,7 @@ const renderRegisterView = (req, res) => {
     return res.render('register', { h1: 'Register', action: 'register' });
 };
 
-const handleRegister = async (req, res) => {
+const handleRegister = async (req, res, next) => {
     try {
         const { username, password } = req.body;
         const { name } = await registerUser(username, password);
@@ -25,10 +25,7 @@ const handleRegister = async (req, res) => {
         } else {
             console.error(err.stack);
             
-            return res.status(500).json({
-                status: 'error',
-                message: 'Internal server error.'
-            });
+            return next(err);
         }
     }
 };
