@@ -4,10 +4,11 @@ import express from 'express';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import mongoose from 'mongoose';
-import cookieParser from 'cookie-parser';
+import session from 'express-session';
 
 // ----- import custom modules -----
 import connectDatabase from './config/connectDatabase.js';
+import sessionConfig from './config/sessionConfig.js';
 import { stopServer } from './utils/serverUtils.js';
 
 // ----- import routers -----
@@ -35,7 +36,7 @@ app.set('x-powered-by', false);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(session(sessionConfig));
 
 // ----- define app routes -----
 app.use('/', indexRouter);
