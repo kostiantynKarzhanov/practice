@@ -55,13 +55,6 @@ app.use(session({
     }
 }));
 
-app.use((req, res, next) => {
-    console.log('current session id:', req.session.id);
-    console.log('current session expires in (s):', req.session.cookie.maxAge / 1000);
-
-    next();
-});
-
 // ----- define app routes -----
 app.use('/', indexRouter);
 app.use('/login', loginRouter);

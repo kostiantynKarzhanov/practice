@@ -1,10 +1,28 @@
-const handleLogout = (req, res) => {
-    // You cannot directly force the browser to delete a cookie from a server response — but you can instruct it to expire the cookie immediately.
-    // clearCookie sets a cookie with a given name to expiration date in the past: 01 Jan 1970 00:00:00 GMT
-    res.clearCookie('auth', { httpOnly: true });
+const handleLogout = async (req, res) => {
+    res.clearCookie(process.env.SESSION_COOKIE_NAME, { httpOnly: true });
 
-    return res.redirect(303, '/login');
-};
+    // --- First version: Destroys the session and will unset the req.session property. Once complete, the callback will be invoked.   
+    return req.session.destroy((err) => {
+        if (err) return next(err);
+
+        return res.redirect(303, '/login');
+    });
+
+    // --- Second version: Clear the user from the session object and save. This will ensure that re-using the old session id does not have a logged in user
+
+    // req.session.user = null;
+
+    // return req.session.save((err) => {
+    //     if (err) return next(err);
+
+    //     // regenerate the session, which is good practice to help guard against forms of session fixation
+    //     return req.session.regenerate((err) => {
+    //         if (err) return next(err);
+
+    //         return res.redirect(303, '/login');
+    //     });
+    // });
+}
 
 export {
     handleLogout
