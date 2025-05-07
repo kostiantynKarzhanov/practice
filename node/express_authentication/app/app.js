@@ -4,7 +4,8 @@ import express from 'express';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import mongoose from 'mongoose';
-import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
 
 // ----- import custom modules -----
 import connectDatabase from './config/connectDatabase.js';
@@ -35,7 +36,17 @@ app.set('x-powered-by', false);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(session({
+    name: process.env.SESSION_COOKIE_NAME,
+    secret: process.env.SESSION_SECRET.split(','),
+    store: MongoStore.create({ client: mongoose.connection.client }),
+    resave: false,
+    saveUninitialized: false,
+    rolling: false,
+    cookie: {
+        maxAge: Number(process.env.SESSION_MAX_AGE_MS)
+    }
+}));
 
 // ----- define app routes -----
 app.use('/', indexRouter);
