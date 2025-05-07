@@ -9,6 +9,10 @@
     <main>
         <%- include('./partials/header', { h1 }) %>
         <p>Hello, <%= username %></p>
+        <div>
+            <p>Session will expire in: <%= sessionOriginalMaxAgeSec %> seconds</p>
+            <p>Session maxAge before reload: <%= sessionMaxAgeBeforeReloadSec %> seconds</p>    
+        </div>
         <%- include('./partials/form-logout') %>
         <%- include('./partials/footer') %>
     </main>
