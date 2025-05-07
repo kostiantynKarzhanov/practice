@@ -51,7 +51,7 @@ app.use(session({
     cookie: {
         // If secure is true, and you access your site over HTTP, the cookie will not be set 
         // secure: true,
-        maxAge: 1000 * 60 // 1 min
+        maxAge: Number(process.env.SESSION_MAX_AGE_MS)
     }
 }));
 
