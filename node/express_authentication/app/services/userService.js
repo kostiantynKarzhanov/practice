@@ -29,24 +29,7 @@ const verifyUser = async (name, password) => {
     }
 };
 
-const loginUser = async (name, password) => {
-    try {
-        const isVerified = await verifyUser(name, password);
-
-        if (!isVerified) return null;
-
-        const credentialsBase64 = Buffer.from(name + ':' + password, 'utf8').toString('base64');
-    
-        return `Basic ${credentialsBase64}`;
-    } catch (err) {
-        console.error(err.stack);
-
-        throw err;    
-    }
-};
-
 export {
     registerUser,
     verifyUser,
-    loginUser
 };
