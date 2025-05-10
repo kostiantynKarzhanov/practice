@@ -16,37 +16,25 @@ const registerUser = async (name, password) => {
     }
 };
 
-const verifyUser = async (name, password) => {
+const findUserByName = (name) => UserModel.findOne({ name }).exec();
+const findUserById = (id) => UserModel.findById(id).exec();
+
+const verifyUser = async (name, password, done) => {
     try {
-        const user = await UserModel.findOne({ name }).exec();
+        const user = await findUserByName(name);
         const isVerified = user && await validatePassword(password, user.hash, user.salt);
 
-        return isVerified;
+        if (isVerified) return done(null, user);
+
+        return done(null, false, { message: 'Incorrect username or password.' });
     } catch (err) {
-        console.error(err.stack);
-
-        throw err;
-    }
-};
-
-const loginUser = async (name, password) => {
-    try {
-        const isVerified = await verifyUser(name, password);
-
-        if (!isVerified) return null;
-
-        const credentialsBase64 = Buffer.from(name + ':' + password, 'utf8').toString('base64');
-    
-        return `Basic ${credentialsBase64}`;
-    } catch (err) {
-        console.error(err.stack);
-
-        throw err;    
+        return done(err);
     }
 };
 
 export {
     registerUser,
+    findUserByName,
+    findUserById,
     verifyUser,
-    loginUser
 };

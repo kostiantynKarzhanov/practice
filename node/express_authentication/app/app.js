@@ -6,10 +6,13 @@ import { dirname, join } from 'node:path';
 import mongoose from 'mongoose';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
+import passport from 'passport';
 
 // ----- import custom modules -----
 import connectDatabase from './config/connectDatabase.js';
+import configurePassport from './config/configurePassport.js';
 import { stopServer } from './utils/serverUtils.js';
+import loggerSession from './middleware/loggerSession.js';
 
 // ----- import routers -----
 import indexRouter from './routers/indexRouter.js';
@@ -27,8 +30,8 @@ const port = process.env.PORT || 3000;
 const databaseConnectionTimeout = setTimeout(stopServer, 3000, 'Database connection timeout');
 const app = express();
 
-// connect to the database
 connectDatabase();
+configurePassport();
 
 app.set('view engine', 'ejs');
 app.set('views', join(__dirname, 'views'));
@@ -42,12 +45,20 @@ app.use(session({
     store: MongoStore.create({ client: mongoose.connection.client }),
     resave: false,
     saveUninitialized: false,
-    rolling: false,
+    rolling: true,
     cookie: {
         maxAge: Number(process.env.SESSION_MAX_AGE_MS)
     }
 }));
 
+// ----- passport initialization -----
+app.use(passport.initialize());
+
+// authenticate each session using the built-in 'session' strategy
+// app.use(passport.authenticate('session'));
+app.use(passport.session());
+
+app.use(loggerSession);
 // ----- define app routes -----
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
