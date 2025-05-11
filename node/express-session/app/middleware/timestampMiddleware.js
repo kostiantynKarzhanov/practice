@@ -1,7 +1,7 @@
 const timestampMiddleware = (req, res, next) => {
     req.timestamp = Date.now();
 
-    next();
+    return next();
 }
 
 export default timestampMiddleware;

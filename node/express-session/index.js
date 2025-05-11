@@ -8,7 +8,7 @@ import timestampMiddleware from './app/middleware/timestampMiddleware.js';
 import logMiddleware from './app/middleware/logMiddleware.js';
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 const database = process.env.DB_MONGO_URI;
 
 // set session store

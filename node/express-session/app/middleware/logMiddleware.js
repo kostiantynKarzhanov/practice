@@ -10,7 +10,7 @@ const logMiddleware = (req, res, next) => {
     console.log('-'.repeat(time.length));
     console.log(`${time}\t${method}\t${path}\t${statusCode}\t${userAgent}`);
 
-    next();
+    return next();
 };
 
 export default logMiddleware;
