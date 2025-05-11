@@ -9,21 +9,21 @@ const generatePublicAndPrivateKeys = () => {
         modulusLength: 4096, // bits, rsa key length
         publicKeyEncoding: {
             type: 'pkcs1', // Public Key Cryptography Standart 1
-            format: 'pem'   
+            format: 'pem'
         },
         privateKeyEncoding: {
             type: 'pkcs1', // Public Key Cryptography Standart 1
             format: 'pem'
         }
     };
-    
+
     return new Promise((resolve, reject) => {
         generateKeyPair('rsa', keyPairOptions, (err, publicKey, privateKey) => {
-            if (err) reject(err);
-
-            resolve({ publicKey, privateKey });
+            if (err) return reject(err);
 
             log('key pair successfully created');
+            
+            return resolve({ publicKey, privateKey });
         });
     });
 };

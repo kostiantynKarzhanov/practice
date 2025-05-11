@@ -21,7 +21,7 @@ const sendEncryptedMessage = async (sendFrom, sendTo, path) => {
         const messageBuffer = await readFile(pathOriginalMessage);
         const encryptedBuffer = publicEncrypt(publicKeyRecipient, messageBuffer);
 
-        log(`Sender: user${sendFrom} encrypted message with user${sendTo} public key`);
+        log(`Sender: user${sendFrom} encrypted message with user${sendTo} PUBLIC key`);
      
         await writeFile(pathEncryptedMessage, encryptedBuffer);
 

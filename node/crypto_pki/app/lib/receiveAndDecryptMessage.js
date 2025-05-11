@@ -19,7 +19,7 @@ const receiveAndDecryptMessage = async (receivedBy, sentBy, path) => {
 
         const messageBuffer = privateDecrypt(privateKeyRecipient, encryptedBuffer);
 
-        log(`Receiver: user${receivedBy} decrypted message`);
+        log(`Receiver: user${receivedBy} decrypted message with PRIVATE key`);
 
         await writeFile(pathDecryptedMessage, messageBuffer);
 
