@@ -17,10 +17,11 @@ const generateKeyPairPromise = () => {
                 format: 'pem',
             },
         }, (err, publicKey, privateKey) => {
-            if (err) reject(err);
+            if (err) return reject(err);
 
-            resolve({ publicKey, privateKey });
             log('key pair succesfully generated');
+            
+            return resolve({ publicKey, privateKey });
         })
     });
 };
