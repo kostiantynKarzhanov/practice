@@ -1,5 +1,5 @@
 import passport from 'passport';
-import { localStrategy } from './passportLocalConfig.js';
+import localStrategy from './passportLocalConfig.js';
 import { UserModel } from './databaseConfig.js';
 
 const configurePassport = () => {

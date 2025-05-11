@@ -1,4 +1,3 @@
-import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import { UserModel } from './databaseConfig.js';
 import { validatePassword } from '../lib/passwordUtils.js';
@@ -22,6 +21,4 @@ const verify = (username, password, done) => {
 
 const localStrategy = new LocalStrategy(customFieldNames, verify);
 
-export {
-	localStrategy
-}
+export default localStrategy

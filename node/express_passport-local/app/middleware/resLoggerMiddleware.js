@@ -8,7 +8,7 @@ const resLoggerMiddleware = (req, res, next) => {
         console.log(`${statusCode}\t${res.getHeader('set-cookie')?.[0] ?? 'session cookie has been already set'}`);
     });
 
-    next();
+    return next();
 }
 
 export default resLoggerMiddleware;

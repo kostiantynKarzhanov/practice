@@ -9,7 +9,7 @@ const reqLoggerMiddleware = (req, res, next) => {
     console.log('\n' + '----- Request ----- ');
     console.log(`${timeStr}\t${method}\t${url}\t${sessionID}`);
 
-    next();
+    return next();
 };
 
 export default reqLoggerMiddleware;

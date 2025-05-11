@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import mongoose from 'mongoose';
 
 const dbConnection = mongoose.createConnection(process.env.DB_STRING_MONGO);
