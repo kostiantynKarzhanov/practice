@@ -19,11 +19,11 @@ const generatePublicAndPrivateKeyPair = () => {
 
     return new Promise((resolve, reject) => {
         generateKeyPair('rsa', keyPairOptions, (err, publicKey, privateKey) => {
-            if (err) reject(err);
-
-            resolve({ publicKey, privateKey });
+            if (err) return reject(err);
 
             log('key pair successfully created');
+            
+            return resolve({ publicKey, privateKey });
         });
     });
 };
