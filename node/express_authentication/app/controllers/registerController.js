@@ -1,9 +1,7 @@
 // ----- import services -----
 import { registerUser } from '../services/userService.js';
 
-const renderRegisterView = (req, res) => {
-    return res.render('register', { h1: 'Register', action: 'register' });
-};
+const renderRegisterView = (req, res) => res.render('register', { h1: 'Register', action: 'register' });
 
 const handleRegister = async (req, res, next) => {
     try {
