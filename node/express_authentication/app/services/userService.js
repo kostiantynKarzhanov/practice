@@ -3,7 +3,7 @@ import UserModel from '../models/UserModel.js';
 
 // ----- import custom modules -----
 import { generateHashFromPassword, validatePassword } from '../utils/passwordUtils.js';
-import { createJWT, createTokenCookie } from '../utils/tokenService.js';
+import { createJWT, createJWTCookie } from '../services/tokenService.js';
 
 const registerUser = async (name, password) => {
     try {
@@ -39,7 +39,7 @@ const loginUser = async (name, password) => {
         if (!isVerified) return null;
 
         const jwt = createJWT(user);
-        const cookie = createTokenCookie(jwt);
+        const cookie = createJWTCookie(jwt);
 
         return cookie;
     } catch (err) {

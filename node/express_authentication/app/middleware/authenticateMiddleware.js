@@ -1,13 +1,15 @@
 // ----- import custom modules -----
-import { verifyJWT, decodeJWTPayload } from '../utils/tokenService.js';
+import { verifyJWT, getUserDataFromJWT } from '../services/tokenService.js';
 
 const authenticateMiddleware = async (req, res, next) => {
     try {
         const { token } = req.cookies;
-        const isVerified = token && verifyJWT(token);
+        const isValid = token && verifyJWT(token);
 
-        if (isVerified) {
-            req.user = decodeJWTPayload(token);
+        if (isValid) {
+            const { name: username } = getUserDataFromJWT(token);
+            req.user = { username };
+
             return next();
         }
 
