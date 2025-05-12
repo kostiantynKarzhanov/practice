@@ -3,6 +3,7 @@ import UserModel from '../models/UserModel.js';
 
 // ----- import custom modules -----
 import { generateHashFromPassword, validatePassword } from '../utils/passwordUtils.js';
+import { createJWT, createTokenCookie } from '../utils/tokenUtils.js';
 
 const registerUser = async (name, password) => {
     try {
@@ -16,9 +17,10 @@ const registerUser = async (name, password) => {
     }
 };
 
-const verifyUser = async (name, password) => {
+const findUserByName = (name) => UserModel.findOne({ name }).exec();
+
+const verifyUser = async (password, user) => {
     try {
-        const user = await UserModel.findOne({ name }).exec();
         const isVerified = user && await validatePassword(password, user.hash, user.salt);
 
         return isVerified;
@@ -31,13 +33,15 @@ const verifyUser = async (name, password) => {
 
 const loginUser = async (name, password) => {
     try {
-        const isVerified = await verifyUser(name, password);
+        const user = await findUserByName(name);
+        const isVerified = await verifyUser(password, user);
 
         if (!isVerified) return null;
 
-        const credentialsBase64 = Buffer.from(name + ':' + password, 'utf8').toString('base64');
-    
-        return `Basic ${credentialsBase64}`;
+        const jwt = createJWT(user);
+        const cookie = createTokenCookie(jwt);
+
+        return cookie;
     } catch (err) {
         console.error(err.stack);
 
@@ -47,6 +51,5 @@ const loginUser = async (name, password) => {
 
 export {
     registerUser,
-    verifyUser,
     loginUser
 };

@@ -2,13 +2,13 @@
 import { Router } from 'express';
 
 // ----- import middleware -----
-import isAuthenticated from '../middleware/isAuthenticated.js';
+import authenticateMiddleware from '../middleware/authenticateMiddleware.js';
 
 // ----- import controllers -----
 import { handleProtectedView } from '../controllers/protectedController.js';
 
 const protectedRouter = Router();
 
-protectedRouter.get('/', isAuthenticated, handleProtectedView);
+protectedRouter.get('/', authenticateMiddleware, handleProtectedView);
 
 export default protectedRouter;

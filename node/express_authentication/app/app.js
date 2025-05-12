@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 
 // ----- import custom modules -----
 import connectDatabase from './config/connectDatabase.js';
+import createKeyPair from './config/createKeyPair.js';
 import { stopServer } from './utils/serverUtils.js';
 
 // ----- import routers -----
@@ -20,14 +21,15 @@ import protectedRouter from './routers/protectedRouter.js';
 // ----- import middleware -----
 import generalErrorHandler from './middleware/generalErrorHandler.js';
 
-// ----- configure the app ----- 
+// ----- initial setup ----- 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const port = process.env.PORT || 3000;
 const databaseConnectionTimeout = setTimeout(stopServer, 3000, 'Database connection timeout');
-const app = express();
 
-// connect to the database
 connectDatabase();
+
+// ----- configure the app -----
+const app = express();
 
 app.set('view engine', 'ejs');
 app.set('views', join(__dirname, 'views'));
@@ -47,6 +49,9 @@ app.use(generalErrorHandler);
 
 mongoose.connection.once('connected', () => {
     clearTimeout(databaseConnectionTimeout);
+    
+    // create PUBLIC and PRIVATE keys
+    createKeyPair();
 
     app.listen(port, () => {
         console.log(`Server is listening on port ${port}`);
