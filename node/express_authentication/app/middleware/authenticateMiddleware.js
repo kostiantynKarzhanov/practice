@@ -1,5 +1,5 @@
 // ----- import custom modules -----
-import { verifyJWT, decodeJWTPayload } from '../utils/tokenUtils.js';
+import { verifyJWT, decodeJWTPayload } from '../utils/tokenService.js';
 
 const authenticateMiddleware = async (req, res, next) => {
     try {

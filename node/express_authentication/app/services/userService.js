@@ -3,7 +3,7 @@ import UserModel from '../models/UserModel.js';
 
 // ----- import custom modules -----
 import { generateHashFromPassword, validatePassword } from '../utils/passwordUtils.js';
-import { createJWT, createTokenCookie } from '../utils/tokenUtils.js';
+import { createJWT, createTokenCookie } from '../utils/tokenService.js';
 
 const registerUser = async (name, password) => {
     try {
