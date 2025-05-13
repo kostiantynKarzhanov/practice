@@ -1,13 +1,16 @@
 // ----- import built-in modules -----
 import { createSign, createVerify } from 'node:crypto';
 
+// ----- import custom modules -----
+import { keyManager } from '../config/keyPairConfig.js';
+
 const createDigitalSignature = (data) => {
     const signObj = createSign(process.env.JWT_ALG);
 
     signObj.write(data);
     signObj.end();
 
-    return signObj.sign(process.env.PRIVATE_KEY, 'base64url');
+    return signObj.sign(keyManager.private, 'base64url');
 };
 
 const verifyDigitalSignature = (data, signature) => {
@@ -16,7 +19,7 @@ const verifyDigitalSignature = (data, signature) => {
     verifyObj.write(data);
     verifyObj.end();
 
-    return verifyObj.verify(process.env.PUBLIC_KEY, signature, 'base64url');
+    return verifyObj.verify(keyManager.public, signature, 'base64url');
 };
 
 export {

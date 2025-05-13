@@ -8,7 +8,7 @@ import cookieParser from 'cookie-parser';
 
 // ----- import custom modules -----
 import connectDatabase from './config/connectDatabase.js';
-import createKeyPair from './config/createKeyPair.js';
+import { loadKeyPair } from './config/keyPairConfig.js';
 import { stopServer } from './utils/serverUtils.js';
 
 // ----- import routers -----
@@ -47,13 +47,17 @@ app.use('/register', registerRouter);
 app.use('/protected', protectedRouter);
 app.use(generalErrorHandler);
 
-mongoose.connection.once('connected', () => {
-    clearTimeout(databaseConnectionTimeout);
-    
-    // create PUBLIC and PRIVATE keys
-    createKeyPair();
+mongoose.connection.once('connected', async () => {
+    try {
+        clearTimeout(databaseConnectionTimeout);
 
-    app.listen(port, () => {
-        console.log(`Server is listening on port ${port}`);
-    });
+        // load or create PUBLIC and PRIVATE keys if not exist
+        await loadKeyPair();
+
+        app.listen(port, () => {
+            console.log(`Server is listening on port ${port}`);
+        });
+    } catch (err) {
+        console.error(err.stack);
+    }
 });
