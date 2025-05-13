@@ -4,5 +4,9 @@ node_modules/
 # Ignore environment variables
 .env
 
+# Ignore keys and tokens
+keys/
+tokens/
+
 # Ignore common OS-generated files/folders
 .DS_Store
