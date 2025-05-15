@@ -8,7 +8,7 @@ const createJWT = (user) => {
     try {
         const { id: sub, name } = user;
         const iat = Date.now();
-        const exp = iat + Number(process.env.JWT_TTL_MS);
+        const exp = iat + Number(process.env.JWT_TTL_MS || 60000);
 
         const headerObj = { alg: 'RS256', typ: 'JWT' };
         const payloadObj = { sub, name, iat, exp };
@@ -57,7 +57,7 @@ const createJWTCookie = (value) => {
             sameSite: 'strict',
             httpOnly: true,
             secure: true,
-            maxAge: Number(process.env.JWT_TTL_MS)
+            maxAge: Number(process.env.JWT_TTL_MS || 60000)
         }
     }
 };
