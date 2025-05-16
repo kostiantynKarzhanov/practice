@@ -1,7 +1,7 @@
 // ----- import built-in modules -----
 import { createSign, createVerify } from 'node:crypto';
 
-// ----- import custom modules -----
+// ----- import config modules -----
 import { keyManager } from '../config/keyPairConfig.js';
 
 const createDigitalSignature = (data) => {

@@ -1,3 +1,4 @@
+// ----- import built-in modules -----
 import { promisify } from 'node:util';
 import { randomBytes, pbkdf2, timingSafeEqual } from 'node:crypto';
 

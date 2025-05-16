@@ -4,7 +4,7 @@ import { generateKeyPair } from 'node:crypto';
 import { join } from 'node:path';
 import { readFile, writeFile } from 'node:fs/promises';
 
-// ----- import custom modules -----
+// ----- import utils -----
 import { mkdirIfNotExist } from '../utils/fileSystemUtils.js';
 
 const keysPath = 'keys';

@@ -1,16 +1,22 @@
-// ----- import custom modules -----
-import { verifyJWT, getUserDataFromJWT } from '../services/tokenService.js';
+// ----- import services -----
+import { verifyAccessToken, getUserDataFromAccessToken } from '../services/tokenService.js';
 
 const authenticateMiddleware = async (req, res, next) => {
     try {
-        const { token } = req.cookies;
-        const isValid = token && verifyJWT(token);
+        const {
+            [process.env.JWT_COOKIE_NAME]: accessToken,
+            [process.env.REFRESH_TOKEN_COOKIE_NAME]: refreshToken
+        } = req.cookies;
 
-        if (isValid) {
-            const { name: username } = getUserDataFromJWT(token);
+        const isValidAccessToken = accessToken && verifyAccessToken(accessToken);
+
+        if (isValidAccessToken) {
+            const { name: username } = getUserDataFromAccessToken(accessToken);
             req.user = { username };
 
             return next();
+        } else if (!isValidAccessToken && refreshToken) {
+            return res.redirect(303, '/refresh');
         }
 
         return res.status(401).json({

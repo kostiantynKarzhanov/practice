@@ -1,7 +1,7 @@
 // ----- import built-in modules -----
 import mongoose from 'mongoose';
 
-// ----- import custom modules -----
+// ----- import utils -----
 import { stopServer } from '../utils/serverUtils.js';
 
 const connectDatabase = async () => {

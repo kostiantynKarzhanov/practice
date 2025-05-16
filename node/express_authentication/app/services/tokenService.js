@@ -1,10 +1,17 @@
-// ----- import custom modules -----
+// ----- import built-in modules -----
+import { randomBytes } from 'node:crypto';
+
+// ----- import dal -----
+import { createRefreshToken, findRefreshTokenByValue, deleteRefreshToken } from '../dal/tokenDAL.js';
+
+// ----- import utils -----
 import { createDigitalSignature, verifyDigitalSignature } from '../utils/digitalSignatureUtils.js';
 
-const encodeBase64Url = (obj) => Buffer.from(JSON.stringify(obj)).toString('base64url'); 
+// ----- access token functions -----
+const encodeBase64Url = (obj) => Buffer.from(JSON.stringify(obj)).toString('base64url');
 const decodeBase64Url = (str) => JSON.parse(Buffer.from(str, 'base64url').toString('utf8'));
 
-const createJWT = (user) => {
+const generateAccessToken = (user) => {
     try {
         const { id: sub, name } = user;
         const iat = Date.now();
@@ -27,13 +34,12 @@ const createJWT = (user) => {
     }
 };
 
-const verifyJWT = (jwt) => {
-    const [ headerBase64Url, payloadBase64Url, jwtSignatureBase64Url ] = jwt.split('.');
-    
+const verifyAccessToken = (token) => {
+    const [headerBase64Url, payloadBase64Url, jwtSignatureBase64Url] = token.split('.');
+
     if (!headerBase64Url || !payloadBase64Url || !jwtSignatureBase64Url) return false;
 
     const jwtHeaderPayloadBase64Url = `${headerBase64Url}.${payloadBase64Url}`;
-
     const isVerified = verifyDigitalSignature(jwtHeaderPayloadBase64Url, jwtSignatureBase64Url);
 
     if (!isVerified) return false;
@@ -43,13 +49,13 @@ const verifyJWT = (jwt) => {
     return exp > Date.now();
 };
 
-const getUserDataFromJWT = (jwt) => {
-    const payloadBase64Url = jwt.split('.')[1];
+const getUserDataFromAccessToken = (token) => {
+    const payloadBase64Url = token.split('.')[1];
 
     return decodeBase64Url(payloadBase64Url);
 };
 
-const createJWTCookie = (value) => {
+const issueAccessTokenCookie = (value) => {
     return {
         name: process.env.JWT_COOKIE_NAME,
         value,
@@ -59,12 +65,62 @@ const createJWTCookie = (value) => {
             secure: true,
             maxAge: Number(process.env.JWT_TTL_MS || 60000)
         }
+    };
+};
+
+// ----- refresh token functions -----
+const generateRefreshToken = async (user) => {
+    try {
+        const { id: userId } = user;
+        const value = randomBytes(64).toString('hex');
+        const expireAt = Date.now() + Number(process.env.REFRESH_TOKEN_TTL_MS);
+
+        const refreshToken = await createRefreshToken(userId, value, expireAt);
+
+        return refreshToken.value;
+    } catch (err) {
+        console.error(err.stack);
+
+        throw err;
     }
 };
 
+const getUserIdFromRefreshToken = async (token) => {
+    try {
+        const refreshToken = await findRefreshTokenByValue(token);
+
+        if (!refreshToken || refreshToken.expireAt < Date.now()) return null;
+
+        return refreshToken.userId;
+    } catch (err) {
+        console.error(err.stack);
+
+        throw err;
+    }
+};
+
+const removeRefreshToken = (token) => deleteRefreshToken(token);
+
+const issueRefreshTokenCookie = (value) => {
+    return {
+        name: process.env.REFRESH_TOKEN_COOKIE_NAME,
+        value,
+        options: {
+            sameSite: 'strict',
+            httpOnly: true,
+            secure: true,
+            maxAge: Number(process.env.REFRESH_TOKEN_TTL_MS || 180000)
+        }
+    };
+};
+
 export {
-    createJWT,
-    verifyJWT,
-    createJWTCookie,
-    getUserDataFromJWT
+    generateAccessToken,
+    verifyAccessToken,
+    getUserDataFromAccessToken,
+    issueAccessTokenCookie,
+    generateRefreshToken,
+    getUserIdFromRefreshToken,
+    removeRefreshToken,
+    issueRefreshTokenCookie,
 };

@@ -6,14 +6,17 @@ import { dirname, join } from 'node:path';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 
-// ----- import custom modules -----
+// ----- import config modules -----
 import connectDatabase from './config/connectDatabase.js';
 import { loadKeyPair } from './config/keyPairConfig.js';
+
+// ----- import utils -----
 import { stopServer } from './utils/serverUtils.js';
 
 // ----- import routers -----
 import indexRouter from './routers/indexRouter.js';
 import loginRouter from './routers/loginRouter.js';
+import refreshRouter from './routers/refreshRouter.js';
 import logoutRouter from './routers/logoutRouter.js';
 import registerRouter from './routers/registerRouter.js';
 import protectedRouter from './routers/protectedRouter.js';
@@ -42,11 +45,13 @@ app.use(cookieParser());
 // ----- define app routes -----
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
+app.use('/refresh', refreshRouter);
 app.use('/logout', logoutRouter);
 app.use('/register', registerRouter);
 app.use('/protected', protectedRouter);
 app.use(generalErrorHandler);
 
+// ----- run server after database successfully connected -----
 mongoose.connection.once('connected', async () => {
     try {
         clearTimeout(databaseConnectionTimeout);
