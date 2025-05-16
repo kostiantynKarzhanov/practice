@@ -1,5 +1,4 @@
 // ----- import built-in modules -----
-import 'dotenv/config';
 import express from 'express';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -7,6 +6,7 @@ import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 
 // ----- import config modules -----
+import { port, dbString } from './config/defaultsConfig.js';
 import connectDatabase from './config/connectDatabase.js';
 import { loadKeyPair } from './config/keyPairConfig.js';
 
@@ -26,10 +26,9 @@ import generalErrorHandler from './middleware/generalErrorHandler.js';
 
 // ----- initial setup ----- 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const port = process.env.PORT || 3000;
 const databaseConnectionTimeout = setTimeout(stopServer, 3000, 'Database connection timeout');
 
-connectDatabase();
+connectDatabase(dbString);
 
 // ----- configure the app -----
 const app = express();

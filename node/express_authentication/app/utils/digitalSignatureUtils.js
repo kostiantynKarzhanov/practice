@@ -2,10 +2,13 @@
 import { createSign, createVerify } from 'node:crypto';
 
 // ----- import config modules -----
+import { accessTokenAlgorithm } from '../config/defaultsConfig.js';
+
+// ----- import config modules -----
 import { keyManager } from '../config/keyPairConfig.js';
 
 const createDigitalSignature = (data) => {
-    const signObj = createSign(process.env.JWT_ALG);
+    const signObj = createSign(accessTokenAlgorithm);
 
     signObj.write(data);
     signObj.end();
@@ -14,7 +17,7 @@ const createDigitalSignature = (data) => {
 };
 
 const verifyDigitalSignature = (data, signature) => {
-    const verifyObj = createVerify(process.env.JWT_ALG);
+    const verifyObj = createVerify(accessTokenAlgorithm);
 
     verifyObj.write(data);
     verifyObj.end();

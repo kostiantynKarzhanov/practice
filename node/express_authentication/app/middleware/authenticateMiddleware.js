@@ -1,11 +1,14 @@
+// ----- import config modules -----
+import { accessTokenName, refreshTokenName } from '../config/defaultsConfig.js';
+
 // ----- import services -----
 import { verifyAccessToken, getUserDataFromAccessToken } from '../services/tokenService.js';
 
 const authenticateMiddleware = async (req, res, next) => {
     try {
         const {
-            [process.env.JWT_COOKIE_NAME]: accessToken,
-            [process.env.REFRESH_TOKEN_COOKIE_NAME]: refreshToken
+            [accessTokenName]: accessToken,
+            [refreshTokenName]: refreshToken
         } = req.cookies;
 
         const isValidAccessToken = accessToken && verifyAccessToken(accessToken);

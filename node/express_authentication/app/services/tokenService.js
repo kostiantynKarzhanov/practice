@@ -1,6 +1,9 @@
 // ----- import built-in modules -----
 import { randomBytes } from 'node:crypto';
 
+// ----- import config modules -----
+import { accessTokenName, accessTokenTTL, refreshTokenName, refreshTokenTTL } from '../config/defaultsConfig.js';
+
 // ----- import dal -----
 import { createRefreshToken, findRefreshTokenByValue, deleteRefreshToken } from '../dal/tokenDAL.js';
 
@@ -15,7 +18,7 @@ const generateAccessToken = (user) => {
     try {
         const { id: sub, name } = user;
         const iat = Date.now();
-        const exp = iat + Number(process.env.JWT_TTL_MS || 60000);
+        const exp = iat + accessTokenTTL;
 
         const headerObj = { alg: 'RS256', typ: 'JWT' };
         const payloadObj = { sub, name, iat, exp };
@@ -57,13 +60,13 @@ const getUserDataFromAccessToken = (token) => {
 
 const issueAccessTokenCookie = (value) => {
     return {
-        name: process.env.JWT_COOKIE_NAME,
+        name: accessTokenName,
         value,
         options: {
             sameSite: 'strict',
             httpOnly: true,
             secure: true,
-            maxAge: Number(process.env.JWT_TTL_MS || 60000)
+            maxAge: accessTokenTTL
         }
     };
 };
@@ -73,7 +76,7 @@ const generateRefreshToken = async (user) => {
     try {
         const { id: userId } = user;
         const value = randomBytes(64).toString('hex');
-        const expireAt = Date.now() + Number(process.env.REFRESH_TOKEN_TTL_MS);
+        const expireAt = Date.now() + refreshTokenTTL;
 
         const refreshToken = await createRefreshToken(userId, value, expireAt);
 
@@ -103,13 +106,13 @@ const removeRefreshToken = (token) => deleteRefreshToken(token);
 
 const issueRefreshTokenCookie = (value) => {
     return {
-        name: process.env.REFRESH_TOKEN_COOKIE_NAME,
+        name: refreshTokenName,
         value,
         options: {
             sameSite: 'strict',
             httpOnly: true,
             secure: true,
-            maxAge: Number(process.env.REFRESH_TOKEN_TTL_MS || 180000)
+            maxAge: refreshTokenTTL
         }
     };
 };

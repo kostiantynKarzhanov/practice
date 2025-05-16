@@ -4,13 +4,17 @@ import mongoose from 'mongoose';
 // ----- import utils -----
 import { stopServer } from '../utils/serverUtils.js';
 
-const connectDatabase = async () => {
+const connectDatabase = async (dbString) => {
     try {
-        await mongoose.connect(process.env.DB_STR_MONGO);
+        if (!dbString) throw new Error('Database string is not set');
+
+        await mongoose.connect(dbString);
         
         console.log('Database connected');
     } catch (err) {
         console.error(err.stack);
+
+        throw err;
     }
 
     mongoose.connection.on('error', (err) => {
