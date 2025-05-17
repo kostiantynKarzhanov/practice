@@ -5,7 +5,7 @@ import { randomBytes } from 'node:crypto';
 import { accessTokenName, accessTokenTTL, refreshTokenName, refreshTokenTTL } from '../config/defaultsConfig.js';
 
 // ----- import dal -----
-import { createRefreshToken, findRefreshTokenByValue, deleteRefreshToken } from '../dal/tokenDAL.js';
+import { createRefreshToken, findRefreshTokenByValue, updateRefreshTokenByValue, deleteRefreshToken } from '../dal/tokenDAL.js';
 
 // ----- import utils -----
 import { createDigitalSignature, verifyDigitalSignature } from '../utils/digitalSignatureUtils.js';
@@ -102,6 +102,17 @@ const getUserIdFromRefreshToken = async (token) => {
     }
 };
 
+const updateRefreshToken = async (value) => {
+    const newValue = randomBytes(64).toString('hex');
+    const expireAt = Date.now() + refreshTokenTTL;
+
+    await updateRefreshTokenByValue(value, newValue, expireAt);
+
+    const refreshToken = await findRefreshTokenByValue(newValue);
+
+    return refreshToken.value;
+};
+
 const removeRefreshToken = (token) => deleteRefreshToken(token);
 
 const issueRefreshTokenCookie = (value) => {
@@ -117,13 +128,34 @@ const issueRefreshTokenCookie = (value) => {
     };
 };
 
+const getAccessTokenCookie = (user) => {
+    const accessToken = generateAccessToken(user);
+    const accessTokenCookie = issueAccessTokenCookie(accessToken);
+
+    return accessTokenCookie;
+};
+
+const getRefreshTokenCookie = async (user) => {
+    const refreshToken = await generateRefreshToken(user);
+    const refreshTokenCookie = issueRefreshTokenCookie(refreshToken);
+
+    return refreshTokenCookie;
+};
+
+const getUpdatedRefreshTokenCookie = async (refreshToken) => {
+    const newRefreshToken = await updateRefreshToken(refreshToken);
+    const refreshTokenCookie = issueRefreshTokenCookie(newRefreshToken);
+
+    return refreshTokenCookie;
+};
+
 export {
-    generateAccessToken,
     verifyAccessToken,
     getUserDataFromAccessToken,
-    issueAccessTokenCookie,
-    generateRefreshToken,
     getUserIdFromRefreshToken,
+    updateRefreshToken,
     removeRefreshToken,
-    issueRefreshTokenCookie,
+    getAccessTokenCookie,
+    getRefreshTokenCookie,
+    getUpdatedRefreshTokenCookie
 };

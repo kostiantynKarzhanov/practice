@@ -1,18 +1,6 @@
 // ----- import services -----
 import { getUserByName, verifyUser } from './userService.js';
-import { generateAccessToken, generateRefreshToken, issueAccessTokenCookie, issueRefreshTokenCookie } from './tokenService.js';
-
-const getAccessCookies = async (user) => {
-    // generate tokens
-    const accessToken = generateAccessToken(user);
-    const refreshToken = await generateRefreshToken(user);
-
-    // get cookies
-    const accessTokenCookie = issueAccessTokenCookie(accessToken);
-    const refreshTokenCookie = issueRefreshTokenCookie(refreshToken);
-
-    return [accessTokenCookie, refreshTokenCookie];
-};
+import { getAccessTokenCookie, getRefreshTokenCookie } from './tokenService.js';
 
 const loginUser = async (name, password) => {
     try {
@@ -22,9 +10,10 @@ const loginUser = async (name, password) => {
 
         if (!isVerified) return null;
 
-        const accessCookies = await getAccessCookies(user);
+        const accessTokenCookie = getAccessTokenCookie(user);
+        const refreshTokenCookie = await getRefreshTokenCookie(user);
 
-        return accessCookies;
+        return [accessTokenCookie, refreshTokenCookie];
     } catch (err) {
         console.error(err.stack);
 
@@ -33,6 +22,5 @@ const loginUser = async (name, password) => {
 };
 
 export {
-    getAccessCookies,
     loginUser
 };

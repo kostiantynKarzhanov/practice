@@ -2,9 +2,8 @@
 import { refreshTokenName } from '../config/defaultsConfig.js';
 
 // ----- import services -----
-import { getUserIdFromRefreshToken, removeRefreshToken } from '../services/tokenService.js';
+import { getUserIdFromRefreshToken, getAccessTokenCookie, getUpdatedRefreshTokenCookie } from '../services/tokenService.js';
 import { getUserById } from '../services/userService.js';
-import { getAccessCookies } from '../services/userTokenService.js';
 
 const handleTokenRefresh = async (req, res, next) => {
     try {
@@ -12,12 +11,10 @@ const handleTokenRefresh = async (req, res, next) => {
         const userId = await getUserIdFromRefreshToken(refreshToken);
         const user = userId && await getUserById(userId);
                 
-        // remove old refresh token
-        await removeRefreshToken(refreshToken);
-
         if (user) {
-            const [accessTokenCookie, refreshTokenCookie] = await getAccessCookies(user);
-
+            const accessTokenCookie = getAccessTokenCookie(user);
+            const refreshTokenCookie = await getUpdatedRefreshTokenCookie(refreshToken);
+            
             res.cookie(accessTokenCookie.name, accessTokenCookie.value, accessTokenCookie.options);
             res.cookie(refreshTokenCookie.name, refreshTokenCookie.value, refreshTokenCookie.options);
             
