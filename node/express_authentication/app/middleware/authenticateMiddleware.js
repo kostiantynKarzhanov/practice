@@ -2,7 +2,7 @@
 import { accessTokenName, refreshTokenName } from '../config/defaultsConfig.js';
 
 // ----- import services -----
-import { verifyAccessToken, getUserDataFromAccessToken } from '../services/tokenService.js';
+import { verifyAccessToken, getUserDataFromAccessToken } from '../services/accessTokenService.js';
 
 const authenticateMiddleware = async (req, res, next) => {
     try {

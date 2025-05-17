@@ -1,6 +1,7 @@
 // ----- import services -----
 import { getUserByName, verifyUser } from './userService.js';
-import { getAccessTokenCookie, getRefreshTokenCookie } from './tokenService.js';
+import { getAccessTokenCookie } from './accessTokenService.js';
+import { getRefreshTokenCookie } from './refreshTokenService.js';
 
 const loginUser = async (name, password) => {
     try {

@@ -2,8 +2,9 @@
 import { refreshTokenName } from '../config/defaultsConfig.js';
 
 // ----- import services -----
-import { getUserIdFromRefreshToken, getAccessTokenCookie, getUpdatedRefreshTokenCookie } from '../services/tokenService.js';
 import { getUserById } from '../services/userService.js';
+import { getAccessTokenCookie } from '../services/accessTokenService.js';
+import { getUserIdFromRefreshToken, getUpdatedRefreshTokenCookie } from '../services/refreshTokenService.js';
 
 const handleTokenRefresh = async (req, res, next) => {
     try {
