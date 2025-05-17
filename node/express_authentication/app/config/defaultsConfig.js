@@ -12,3 +12,10 @@ export const accessTokenTTL = Number(process.env.JWT_TTL_MS) || 60000; // 1 minu
 // refresh token configuration
 export const refreshTokenName = process.env.REFRESH_TOKEN_COOKIE_NAME || 'refresh_token';
 export const refreshTokenTTL = Number(process.env.REFRESH_TOKEN_TTL_MS) || 180000; // 3 minutes in milliseconds
+
+// cookie configuration
+export const cookieSecureOptions = {
+    secure: true,
+    httpOnly: true,
+    sameSite: 'strict'
+};

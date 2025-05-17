@@ -2,7 +2,7 @@
 import { randomBytes } from 'node:crypto';
 
 // ----- import config modules -----
-import { refreshTokenName, refreshTokenTTL } from '../config/defaultsConfig.js';
+import { refreshTokenName, refreshTokenTTL, cookieSecureOptions } from '../config/defaultsConfig.js';
 
 // ----- import dal -----
 import { createRefreshToken, findRefreshTokenByValue, updateRefreshTokenByValue, deleteRefreshToken } from '../dal/tokenDAL.js';
@@ -55,9 +55,7 @@ const issueRefreshTokenCookie = (value) => {
         name: refreshTokenName,
         value,
         options: {
-            sameSite: 'strict',
-            httpOnly: true,
-            secure: true,
+            ...cookieSecureOptions,
             maxAge: refreshTokenTTL
         }
     };

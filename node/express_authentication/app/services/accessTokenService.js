@@ -1,5 +1,5 @@
 // ----- import config modules -----
-import { accessTokenName, accessTokenTTL } from '../config/defaultsConfig.js';
+import { accessTokenName, accessTokenTTL, cookieSecureOptions } from '../config/defaultsConfig.js';
 
 // ----- import utils -----
 import { createDigitalSignature, verifyDigitalSignature } from '../utils/digitalSignatureUtils.js';
@@ -56,9 +56,7 @@ const issueAccessTokenCookie = (value) => {
         name: accessTokenName,
         value,
         options: {
-            sameSite: 'strict',
-            httpOnly: true,
-            secure: true,
+            ...cookieSecureOptions,
             maxAge: accessTokenTTL
         }
     };
