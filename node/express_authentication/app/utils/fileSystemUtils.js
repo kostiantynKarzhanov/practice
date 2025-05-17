@@ -11,8 +11,6 @@ const mkdirIfNotExist = async (path) => {
         if (err.code === 'EEXIST') {
             console.error('Directory already exist');
         } else {
-            console.error(err.stack);
-
             throw err;
         }
     }

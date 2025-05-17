@@ -7,9 +7,9 @@ const handleRegister = async (req, res, next) => {
     try {
         const { username, password } = req.body;
         const { name } = await registerUser(username, password);
-    
-        return res.status(201).json({ 
-            status: 'Success', 
+
+        return res.status(201).json({
+            status: 'Success',
             message: `User with the name: "${name}" has been registered.`
         });
     } catch (err) {
@@ -20,11 +20,9 @@ const handleRegister = async (req, res, next) => {
                 status: 'error',
                 message: `User with the name "${err.keyValue.name}" already exists, try another name.`
             });
-        } else {
-            console.error(err.stack);
-            
-            return next(err);
         }
+
+        return next(err);
     }
 };
 

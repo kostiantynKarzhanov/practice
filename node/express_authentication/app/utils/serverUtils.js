@@ -1,5 +1,5 @@
 const stopServer = (message) => {
-    console.error(`${message}. Stopping the server.`);
+    console.error(`${message}. Stopping the server...`);
     process.exit(1);
 };
 

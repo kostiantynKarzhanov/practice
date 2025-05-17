@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 // ----- import utils -----
 import { stopServer } from '../utils/serverUtils.js';
 
-const connectDatabase = async (dbString) => {
+const connectDatabase = async (dbString) => {   
     try {
         if (!dbString) throw new Error('Database string is not set');
 
@@ -21,7 +21,7 @@ const connectDatabase = async (dbString) => {
         console.error(`Database connection error: ${err.message}`);
 
         stopServer(err.message);
-    })
+    });
 };
 
 export default connectDatabase;

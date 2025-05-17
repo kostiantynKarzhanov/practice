@@ -15,7 +15,7 @@ const clearCookieMiddleware = async (req, res, next) => {
     // res.clearCookie(name, options);
     cookieToClearArr.forEach(i => res.clearCookie(i, cookieSecureOptions));
 
-    next();
+    return next();
 };
 
 export default clearCookieMiddleware;

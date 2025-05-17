@@ -8,27 +8,15 @@ const getUserById = (id) => findUserById(id);
 const getUserByName = (name) => findUserByName(name);
 
 const registerUser = async (name, password) => {
-    try {
-        const { hash, salt } = await generateHashFromPassword(password);
-         
-        return createUser(name, hash, salt);
-    } catch (err) {
-        console.error(err.stack);
+    const { hash, salt } = await generateHashFromPassword(password);
 
-        throw err;
-    }
+    return createUser(name, hash, salt);
 };
 
 const verifyUser = async (password, user) => {
-    try {
-        const isVerified = user && await validatePassword(password, user.hash, user.salt);
+    const isVerified = user && await validatePassword(password, user.hash, user.salt);
 
-        return isVerified;
-    } catch (err) {
-        console.error(err.stack);
-
-        throw err;
-    }
+    return isVerified;
 };
 
 export {

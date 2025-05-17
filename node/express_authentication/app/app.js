@@ -26,7 +26,7 @@ import generalErrorHandler from './middleware/generalErrorHandler.js';
 
 // ----- initial setup ----- 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const databaseConnectionTimeout = setTimeout(stopServer, 3000, 'Database connection timeout');
+const databaseConnectionTimeout = setTimeout(stopServer, 3000, 'Database connection timeout.');
 
 connectDatabase(dbString);
 
@@ -48,20 +48,18 @@ app.use('/refresh', refreshRouter);
 app.use('/logout', logoutRouter);
 app.use('/register', registerRouter);
 app.use('/protected', protectedRouter);
+
+// ----- set error handler -----
 app.use(generalErrorHandler);
 
-// ----- run server after database successfully connected -----
+// ----- run server if database successfully connected -----
 mongoose.connection.once('connected', async () => {
-    try {
-        clearTimeout(databaseConnectionTimeout);
+    clearTimeout(databaseConnectionTimeout);
 
-        // load or create PUBLIC and PRIVATE keys if not exist
-        await loadKeyPair();
+    // load or create PUBLIC and PRIVATE keys if not exist
+    await loadKeyPair();
 
-        app.listen(port, () => {
-            console.log(`Server is listening on port ${port}`);
-        });
-    } catch (err) {
-        console.error(err.stack);
-    }
+    app.listen(port, () => {
+        console.log(`Server is listening on port ${port}`);
+    });
 });

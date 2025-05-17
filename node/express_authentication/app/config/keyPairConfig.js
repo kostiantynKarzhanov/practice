@@ -52,7 +52,7 @@ const loadKeyPair = async () => {
         console.log('PUBLIC and PRIVATE keys have been successfully loaded into Key Manager');
     } catch (err) {
         if (err.code === 'ENOENT') {
-            console.error('Keys not found, generating new RSA key pair');
+            console.error('Keys not found, generating new RSA key pair...');
 
             await createKeyPair();
             await loadKeyPair();

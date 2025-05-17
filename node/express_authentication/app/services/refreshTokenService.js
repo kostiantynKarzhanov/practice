@@ -8,33 +8,21 @@ import { refreshTokenName, refreshTokenTTL, cookieSecureOptions } from '../confi
 import { createRefreshToken, findRefreshTokenByValue, updateRefreshTokenByValue, deleteRefreshToken } from '../dal/tokenDAL.js';
 
 const generateRefreshToken = async (user) => {
-    try {
-        const { id: userId } = user;
-        const value = randomBytes(64).toString('hex');
-        const expireAt = Date.now() + refreshTokenTTL;
+    const { id: userId } = user;
+    const value = randomBytes(64).toString('hex');
+    const expireAt = Date.now() + refreshTokenTTL;
 
-        const refreshToken = await createRefreshToken(userId, value, expireAt);
+    const refreshToken = await createRefreshToken(userId, value, expireAt);
 
-        return refreshToken.value;
-    } catch (err) {
-        console.error(err.stack);
-
-        throw err;
-    }
+    return refreshToken.value;
 };
 
 const getUserIdFromRefreshToken = async (token) => {
-    try {
-        const refreshToken = await findRefreshTokenByValue(token);
+    const refreshToken = await findRefreshTokenByValue(token);
 
-        if (!refreshToken || refreshToken.expireAt < Date.now()) return null;
+    if (!refreshToken || refreshToken.expireAt < Date.now()) return null;
 
-        return refreshToken.userId;
-    } catch (err) {
-        console.error(err.stack);
-
-        throw err;
-    }
+    return refreshToken.userId;
 };
 
 const updateRefreshToken = async (value) => {

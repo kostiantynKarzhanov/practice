@@ -8,26 +8,20 @@ const encodeBase64Url = (obj) => Buffer.from(JSON.stringify(obj)).toString('base
 const decodeBase64Url = (str) => JSON.parse(Buffer.from(str, 'base64url').toString('utf8'));
 
 const generateAccessToken = (user) => {
-    try {
-        const { id: sub, name } = user;
-        const iat = Date.now();
-        const exp = iat + accessTokenTTL;
+    const { id: sub, name } = user;
+    const iat = Date.now();
+    const exp = iat + accessTokenTTL;
 
-        const headerObj = { alg: 'RS256', typ: 'JWT' };
-        const payloadObj = { sub, name, iat, exp };
+    const headerObj = { alg: 'RS256', typ: 'JWT' };
+    const payloadObj = { sub, name, iat, exp };
 
-        const headerBase64Url = encodeBase64Url(headerObj);
-        const payloadBase64Url = encodeBase64Url(payloadObj);
+    const headerBase64Url = encodeBase64Url(headerObj);
+    const payloadBase64Url = encodeBase64Url(payloadObj);
 
-        const jwtHeaderPayloadBase64Url = `${headerBase64Url}.${payloadBase64Url}`;
-        const jwtSignatureBase64Url = createDigitalSignature(jwtHeaderPayloadBase64Url);
+    const jwtHeaderPayloadBase64Url = `${headerBase64Url}.${payloadBase64Url}`;
+    const jwtSignatureBase64Url = createDigitalSignature(jwtHeaderPayloadBase64Url);
 
-        return `${jwtHeaderPayloadBase64Url}.${jwtSignatureBase64Url}`;
-    } catch (err) {
-        console.log(err.stack);
-
-        throw err;
-    }
+    return `${jwtHeaderPayloadBase64Url}.${jwtSignatureBase64Url}`;
 };
 
 const verifyAccessToken = (token) => {
